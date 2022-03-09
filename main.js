@@ -37,6 +37,14 @@ const deleteIssue = id => {
   fetchIssues();
 }
 
+const setStatusClosed = id => {
+  const issues = JSON.parse(localStorage.getItem('issues'));
+  issues.forEach(issue => { if (issue.id === id) issue.status = 'Closed'; })
+  localStorage.setItem('issues', JSON.stringify(issues));
+
+  fetchIssues();
+}
+
 const fetchIssues = () => {
   const issues = JSON.parse(localStorage.getItem('issues'));
   const issuesList = document.getElementById('issuesList');
@@ -44,10 +52,10 @@ const fetchIssues = () => {
 
   for (var i = 0; i < issues.length; i++) {
     const { id, description, severity, assignedTo, status } = issues[i];
-
+    const labelType = status === 'Open' ? 'label-info' : 'label-danger';
     issuesList.innerHTML += `<div class="well">
                               <h6>Issue ID: ${id} </h6>
-                              <p><span class="label label-info"> ${status} </span></p>
+                              <p><span class="label ${labelType}"> ${status} </span></p>
                               <h3> ${description} </h3>
                               <p><span class="glyphicon glyphicon-time"></span> ${severity}</p>
                               <p><span class="glyphicon glyphicon-user"></span> ${assignedTo}</p>
